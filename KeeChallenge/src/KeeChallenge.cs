@@ -40,8 +40,15 @@ namespace KeeChallenge
         public const int responseLenBytes = 20;
         public const int secretLenBytes = 20;
 
+        public bool UseYubiSlot1
+        {
+            get;
+            set;
+        }
+
         public KeeChallengeProv()
         {
+            UseYubiSlot1 = false;
         }
 
         private string AuxFile
@@ -287,6 +294,8 @@ namespace KeeChallenge
             //show the entry dialog for the secret
             //get the secret
             KeyCreation creator = new KeyCreation();
+            creator.UseSlot1 = UseYubiSlot1;
+
             if (creator.ShowDialog() != System.Windows.Forms.DialogResult.OK) return null;
 
             byte[] secret = new byte[creator.Secret.Length];
@@ -322,8 +331,7 @@ namespace KeeChallenge
             }
                 //show the dialog box prompting user to press yubikey button
             byte[] resp = new byte[responseLenBytes];
-            KeyEntry entryForm = new KeyEntry();
-            entryForm.Challenge = challenge;
+            KeyEntry entryForm = new KeyEntry(challenge,UseYubiSlot1);
             
             if (entryForm.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                 return null;

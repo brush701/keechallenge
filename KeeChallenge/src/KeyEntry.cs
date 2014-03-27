@@ -36,6 +36,7 @@ namespace KeeChallenge
         private byte[] m_challenge;
         private byte[] m_response;
         private IntPtr yk = IntPtr.Zero;
+        private bool useSlot1 = false;
         
         private bool success;
 
@@ -64,12 +65,13 @@ namespace KeeChallenge
             Icon = Icon.FromHandle(Properties.Resources.yubikey.GetHicon());
         }
 
-        public KeyEntry(byte[] challenge)
+        public KeyEntry(byte[] challenge, bool slot1)
         {
             InitializeComponent();
             success = false;
             Response = new byte[KeeChallengeProv.responseLenBytes];
             Challenge = challenge;
+            useSlot1 = slot1;
 
             Icon = Icon.FromHandle(Properties.Resources.yubikey.GetHicon());
         }
@@ -83,7 +85,9 @@ namespace KeeChallenge
             {
                 if (Challenge == null) return;
                 byte[] temp = new byte[yubiBufferLen];
-                success = YubiWrapper.yk_challenge_response(yk, YubiWrapper.SLOT_CHAL_HMAC2, 1, KeeChallengeProv.challengeLenBytes, m_challenge, yubiBufferLen, temp) == 1;
+                byte slot = YubiWrapper.SLOT_CHAL_HMAC2;
+                if (useSlot1) slot = YubiWrapper.SLOT_CHAL_HMAC1;
+                success = YubiWrapper.yk_challenge_response(yk, slot, 1, KeeChallengeProv.challengeLenBytes, m_challenge, yubiBufferLen, temp) == 1;
                 Array.Copy(temp, Response, Response.Length);
             }
             catch (Exception ex)
@@ -127,12 +131,6 @@ namespace KeeChallenge
             progressBar.Minimum = 0;
             progressBar.Value = 15; 
 
-            //spawn background countdown timer
-            countdown = new System.Windows.Forms.Timer();
-            countdown.Tick += Countdown;
-            countdown.Interval = 1000;
-            countdown.Enabled = true;
-
             try
             {
                 if (YubiWrapper.yk_init() != 1) return;
@@ -156,13 +154,16 @@ namespace KeeChallenge
                 return;
             }
 
+            //spawn background countdown timer
+            countdown = new System.Windows.Forms.Timer();
+            countdown.Tick += Countdown;
+            countdown.Interval = 1000;
+            countdown.Enabled = true;
 
             keyWorker = new BackgroundWorker();            
             keyWorker.DoWork += YubiChallengeResponse;
             keyWorker.RunWorkerCompleted += keyWorkerDone;
-            keyWorker.RunWorkerAsync();
-
-            countdown.Start();            
+            keyWorker.RunWorkerAsync();     
         }
 
         private void OnFormClosed(object sender, FormClosedEventArgs e)

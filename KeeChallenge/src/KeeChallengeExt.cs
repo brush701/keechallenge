@@ -19,6 +19,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Forms;
+using System.Configuration;
 
 using KeePass.Plugins;
 
@@ -28,6 +30,16 @@ namespace KeeChallenge
     {
         private IPluginHost m_host = null;
         private KeeChallengeProv m_prov = null;
+
+        private ToolStripMenuItem m_MenuItem = null;
+        private ToolStripMenuItem m_YubiSlot1 = null;
+        private ToolStripMenuItem m_YubiSlot2 = null;
+        private ToolStripSeparator m_Separator = null;
+
+        public override String UpdateUrl
+        {
+            get { return "https://sourceforge.net/p/keechallenge/code/ci/master/tree/VERSION?format=raw"; }
+        }
 
         public IPluginHost Host
         {
@@ -41,8 +53,36 @@ namespace KeeChallenge
             if (host == null) return false;
 
             m_host = host;
+            
+            bool yubiSlot1 = Properties.Settings.Default.UseSlot1;               
+         
+            ToolStripItemCollection tsMenu = m_host.MainWindow.ToolsMenu.DropDownItems;
+            m_Separator = new ToolStripSeparator();
+            tsMenu.Add(m_Separator);
+
+            m_YubiSlot1 = new ToolStripMenuItem();
+            m_YubiSlot1.Name = "Slot1";
+            m_YubiSlot1.Text = "Slot 1";
+            m_YubiSlot1.CheckOnClick = true;
+            m_YubiSlot1.Checked = yubiSlot1;
+            m_YubiSlot1.Click += (s, e) => { m_YubiSlot2.Checked = false; m_prov.UseYubiSlot1 = true; };
+            
+            m_YubiSlot2 = new ToolStripMenuItem();
+            m_YubiSlot2.Name = "Slot2";
+            m_YubiSlot2.Text = "Slot 2";
+            m_YubiSlot2.CheckOnClick = true;
+            m_YubiSlot2.Checked = !yubiSlot1;
+            m_YubiSlot2.Click += (s, e) => { m_YubiSlot1.Checked = false; m_prov.UseYubiSlot1 = false; };
+
+            m_MenuItem = new ToolStripMenuItem();
+            m_MenuItem.Text = "KeeChallenge Settings";
+            m_MenuItem.DropDownItems.AddRange(new ToolStripItem[] { m_YubiSlot1, m_YubiSlot2 });
+            
+            tsMenu.Add(m_MenuItem);
+
 
             m_prov = new KeeChallengeProv();
+            m_prov.UseYubiSlot1 = yubiSlot1;
             m_host.KeyProviderPool.Add(m_prov);
 
             return true;
@@ -54,10 +94,17 @@ namespace KeeChallenge
             {
                 m_host.KeyProviderPool.Remove(m_prov);
 
+                Properties.Settings.Default.UseSlot1 = m_YubiSlot1.Checked;
+                Properties.Settings.Default.Save();
+
+                ToolStripItemCollection tsMenu = m_host.MainWindow.ToolsMenu.DropDownItems;
+                tsMenu.Remove(m_MenuItem);
+                tsMenu.Remove(m_Separator);
+
                 m_prov = null;
                 m_host = null;
             }
-        }
+        }       
      
     }
 }

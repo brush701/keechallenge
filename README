@@ -2,6 +2,11 @@ KeeChallenge v1.0.1
 Copyright 2014 Ben Rush
 
 CHANGES
+v1.0.2
+-Added support for choosing Yubikey slot via Tools->KeeChallenge Settings. Default is slot 2
+-Added plugin update checking
+-Don't start the 15 second countdown until the Yubikey is inserted
+v1.0.1
 -Updated KeeEntry.cs and YubiWrapper.cs to properly initialize and clean up the native Yubico libraries
 
 SUPPORTED PLATFORMS

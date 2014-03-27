@@ -37,6 +37,8 @@ namespace KeeChallenge
             private set;
         }
 
+        public bool UseSlot1 = false;
+
         public KeyCreation()
         {
             InitializeComponent();
@@ -87,7 +89,7 @@ namespace KeeChallenge
 
                 //Confirm they have a key whose secret matches this
                 byte[] challenge = KeeChallengeProv.GenerateChallenge();
-                KeyEntry validate = new KeyEntry(challenge);               
+                KeyEntry validate = new KeyEntry(challenge, UseSlot1);               
                 
                 if ( validate.ShowDialog(this) != DialogResult.OK)
                 {
