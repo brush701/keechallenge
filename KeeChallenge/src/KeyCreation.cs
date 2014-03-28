@@ -37,13 +37,14 @@ namespace KeeChallenge
             private set;
         }
 
-        public bool UseSlot1 = false;
+        public YubiSlot slot;
 
         public KeyCreation()
         {
             InitializeComponent();
             Secret = null;
             Icon = Icon.FromHandle(Properties.Resources.yubikey.GetHicon());
+            slot = YubiSlot.SLOT2;
         }
   
         public void OnClosing(object o, FormClosingEventArgs e)
@@ -89,7 +90,7 @@ namespace KeeChallenge
 
                 //Confirm they have a key whose secret matches this
                 byte[] challenge = KeeChallengeProv.GenerateChallenge();
-                KeyEntry validate = new KeyEntry(challenge, UseSlot1);               
+                KeyEntry validate = new KeyEntry(challenge, slot);               
                 
                 if ( validate.ShowDialog(this) != DialogResult.OK)
                 {

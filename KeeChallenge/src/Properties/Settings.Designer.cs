@@ -25,13 +25,13 @@ namespace KeeChallenge.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool UseSlot1 {
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int YubikeySlot {
             get {
-                return ((bool)(this["UseSlot1"]));
+                return ((int)(this["YubikeySlot"]));
             }
             set {
-                this["UseSlot1"] = value;
+                this["YubikeySlot"] = value;
             }
         }
     }

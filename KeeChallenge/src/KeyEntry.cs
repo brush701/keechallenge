@@ -35,8 +35,8 @@ namespace KeeChallenge
         private System.Windows.Forms.Timer countdown;
         private byte[] m_challenge;
         private byte[] m_response;
-        private IntPtr yk = IntPtr.Zero;
-        private bool useSlot1 = false;
+        private YubiWrapper yubi;
+        private YubiSlot yubiSlot;
         
         private bool success;
 
@@ -61,49 +61,28 @@ namespace KeeChallenge
             success = false;
             Response = new byte[KeeChallengeProv.responseLenBytes];
             Challenge = null;
-
+            yubiSlot = YubiSlot.SLOT2;
             Icon = Icon.FromHandle(Properties.Resources.yubikey.GetHicon());
         }
 
-        public KeyEntry(byte[] challenge, bool slot1)
+        public KeyEntry(byte[] challenge, YubiSlot slot)
         {
             InitializeComponent();
             success = false;
             Response = new byte[KeeChallengeProv.responseLenBytes];
             Challenge = challenge;
-            useSlot1 = slot1;
+            yubiSlot = slot;
 
             Icon = Icon.FromHandle(Properties.Resources.yubikey.GetHicon());
         }
                
         private void YubiChallengeResponse(object sender, DoWorkEventArgs e) //Should terminate in 15seconds worst case
         {
-            uint yubiBufferLen = 64;
-
             //Send the challenge to yubikey and get response
-            try
-            {
-                if (Challenge == null) return;
-                byte[] temp = new byte[yubiBufferLen];
-                byte slot = YubiWrapper.SLOT_CHAL_HMAC2;
-                if (useSlot1) slot = YubiWrapper.SLOT_CHAL_HMAC1;
-                success = YubiWrapper.yk_challenge_response(yk, slot, 1, KeeChallengeProv.challengeLenBytes, m_challenge, yubiBufferLen, temp) == 1;
-                Array.Copy(temp, Response, Response.Length);
-            }
-            catch (Exception ex)
-            {
-                Debug.Assert(false, ex.ToString());
-            }
-            finally
-            {
-                bool ret = false;
-                if (yk != IntPtr.Zero)
-                    ret = YubiWrapper.yk_close_key(yk) == 1;
-                if (!ret || YubiWrapper.yk_release() != 1)
-                {
-                    throw new Exception("Error closing Yubikey");
-                }
-            }
+            if (Challenge == null) return;
+            success = yubi.ChallengeResponse(yubiSlot, Challenge, out m_response);
+            if (!success)
+                MessageBox.Show("Error getting response from yubikey", "Error");           
 
             return;
         }
@@ -129,29 +108,17 @@ namespace KeeChallenge
 
             progressBar.Maximum = 15;
             progressBar.Minimum = 0;
-            progressBar.Value = 15; 
+            progressBar.Value = 15;
 
-            try
+            yubi = new YubiWrapper();
+            while (!yubi.Init())
             {
-                if (YubiWrapper.yk_init() != 1) return;
-
-                while (yk == IntPtr.Zero)
+                YubiPrompt prompt = new YubiPrompt();
+                if (prompt.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
                 {
-                    yk = YubiWrapper.yk_open_first_key();
-                    if (yk == IntPtr.Zero)
-                    {
-                        YubiPrompt prompt = new YubiPrompt();
-                        if (prompt.ShowDialog() == System.Windows.Forms.DialogResult.Cancel) return;
-                    }
-
+                    DialogResult = System.Windows.Forms.DialogResult.Abort;
+                    return;
                 }
-            }
-            catch (Exception)
-            {
-                Debug.Assert(false);
-                MessageBox.Show("Error connecting to yubikey!", "Error", MessageBoxButtons.OK);
-                DialogResult = System.Windows.Forms.DialogResult.Abort;
-                return;
             }
 
             //spawn background countdown timer
@@ -170,6 +137,7 @@ namespace KeeChallenge
         {
             countdown.Enabled = false;
             countdown.Dispose();
+            yubi.Close();
             GlobalWindowManager.RemoveWindow(this);
         }
     }
