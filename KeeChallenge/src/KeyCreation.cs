@@ -52,44 +52,26 @@ namespace KeeChallenge
             if (DialogResult == DialogResult.OK)
             {
                 Secret = new byte[KeeChallengeProv.secretLenBytes];
-                if (secretTextBox.Text.Contains(' ')) //If they used spaces
+                secretTextBox.Text = secretTextBox.Text.Replace(" ", string.Empty); //remove spaces
+                
+                if (secretTextBox.Text.Length == KeeChallengeProv.secretLenBytes * 2)
                 {
-                    string[] hexValuesSplit = secretTextBox.Text.Split(' ');
-                    
-                    if (hexValuesSplit.Length != KeeChallengeProv.secretLenBytes)
+                    for (int i = 0; i < secretTextBox.Text.Length; i += 2)
                     {
-                        //let them know 
-                        MessageBox.Show("Error: secret must be 20 bytes long");
-                        e.Cancel = true;
-                        return;
-                    }
-
-                    for (int i = 0; i < Secret.Length; i++)
-                    {
-                        Secret[i] = Convert.ToByte(hexValuesSplit[i],16);
+                        string b = secretTextBox.Text.Substring(i, 2);
+                        Secret[i / 2] = Convert.ToByte(b,16);
                     }
                 }
-                else //no spaces
+                else
                 {
-                    if (secretTextBox.Text.Length == KeeChallengeProv.secretLenBytes * 2)
-                    {
-                        for (int i = 0; i < secretTextBox.Text.Length; i += 2)
-                        {
-                            string b = secretTextBox.Text.Substring(i, 2);
-                            Secret[i / 2] = Convert.ToByte(b,16);
-                        }
-                    }
-                    else
-                    {
-                        //invalid key
-                        MessageBox.Show("Error: secret must be 20 bytes long");
-                        e.Cancel = true;
-                        return;
-                    }
+                    //invalid key
+                    MessageBox.Show("Error: secret must be 20 bytes long");
+                    e.Cancel = true;
+                    return;
                 }
-
+                
                 //Confirm they have a key whose secret matches this
-                byte[] challenge = KeeChallengeProv.GenerateChallenge();
+                byte[] challenge = KeeChallengeProv.GenerateChallenge();                
                 KeyEntry validate = new KeyEntry(challenge, slot);               
                 
                 if ( validate.ShowDialog(this) != DialogResult.OK)

@@ -59,7 +59,7 @@ namespace KeeChallenge
         {
             InitializeComponent();
             success = false;
-            Response = new byte[KeeChallengeProv.responseLenBytes];
+            Response = new byte[YubiWrapper.yubiRespLen];
             Challenge = null;
             yubiSlot = YubiSlot.SLOT2;
             Icon = Icon.FromHandle(Properties.Resources.yubikey.GetHicon());
@@ -69,7 +69,7 @@ namespace KeeChallenge
         {
             InitializeComponent();
             success = false;
-            Response = new byte[KeeChallengeProv.responseLenBytes];
+            Response = new byte[YubiWrapper.yubiRespLen];
             Challenge = challenge;
             yubiSlot = slot;
 
@@ -99,7 +99,11 @@ namespace KeeChallenge
             if (countdown == null) return;
             if (progressBar.Value > 0)
                 progressBar.Value--;
-            else countdown.Stop(); //we're done, the keyWorker should finish momentarily and close the window for us
+            else
+            {
+                countdown.Stop();
+                this.Close();
+            }
         }
         
         private void OnFormLoad(object sender, EventArgs e)

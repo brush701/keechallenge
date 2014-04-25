@@ -37,7 +37,6 @@ namespace KeeChallenge
         public const string m_name = "Yubikey challenge-response";
         public const int keyLenBytes = 20;
         public const int challengeLenBytes = 64;
-        public const int responseLenBytes = 20;
         public const int secretLenBytes = 20;
 
         public YubiSlot YubikeySlot
@@ -330,7 +329,7 @@ namespace KeeChallenge
                 return secret;
             }
                 //show the dialog box prompting user to press yubikey button
-            byte[] resp = new byte[responseLenBytes];
+            byte[] resp = new byte[YubiWrapper.yubiRespLen];
             KeyEntry entryForm = new KeyEntry(challenge,YubikeySlot);
             
             if (entryForm.ShowDialog() != System.Windows.Forms.DialogResult.OK)

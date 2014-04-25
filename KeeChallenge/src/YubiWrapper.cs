@@ -34,17 +34,13 @@ namespace KeeChallenge
 
     public class YubiWrapper
     {
-        //public const byte SLOT_CHAL_HMAC1 = 0x30;
-        //public const byte SLOT_CHAL_HMAC2 = 0x38;
-
-        private const uint yubiRespLen = 20;
+        public const uint yubiRespLen = 20;
         private const uint yubiBuffLen = 64;
-        private const uint yubiChalLen = 64;
         
         private static ReadOnlyCollection<byte> slots = new ReadOnlyCollection<byte>(new List<byte>()
         {
-            0x30, 
-            0x38 
+            0x30, //SLOT_CHAL_HMAC1
+            0x38  //SLOT_CHAL_HMAC2
         });
 
         private IntPtr yk;
@@ -87,7 +83,7 @@ namespace KeeChallenge
             if (yk == IntPtr.Zero) return false;
             
             byte[] temp = new byte[yubiBuffLen];
-            int ret = yk_challenge_response(yk, slots[(int)slot], 1, yubiChalLen, challenge, yubiBuffLen, temp);
+            int ret = yk_challenge_response(yk, slots[(int)slot], 1, (uint)challenge.Length, challenge, yubiBuffLen, temp);
             if (ret == 1)
             {
                 Array.Copy(temp, response, response.Length);
