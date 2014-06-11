@@ -30,3 +30,5 @@ Your secret is used as the key to encrypt the database. In order to avoid storin
 
 If the xml file gets corrupted or deleted (or if you lose your yubikey) a recovery mode is provided to allow you to enter your secret (you did save it, didn't you?) and decrypt the database. 
 
+KeeChallenge is not intended to be used as the sole means of authenticating yourself to Keepass. It's entirely vulnerable to physical attacks: if you are only using your Yubikey to login and somebody steals it, your database will be compromised. You should always use KeeChallenge in conjunction with a strong master password to mitigate this risk. This also allows us to take advantage of Keepass' built in protections against brute forcing.
+
