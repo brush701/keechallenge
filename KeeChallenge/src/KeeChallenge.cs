@@ -28,7 +28,7 @@ using KeePassLib.Keys;
 using KeePassLib.Utility;
 using KeePassLib.Cryptography;
 using KeePass.UI;
-
+using KeePassLib.Serialization;
 
 namespace KeeChallenge
 {
@@ -50,11 +50,7 @@ namespace KeeChallenge
             YubikeySlot = YubiSlot.SLOT2;
         }
 
-        private string AuxFile
-        {
-            get;
-            set;
-        }        
+        private IOConnectionInfo mInfo;
 
         public override string Name
         {
@@ -76,9 +72,10 @@ namespace KeeChallenge
                 Debug.Assert(false);
                 return null;
             }
-            
-            string db = ctx.DatabasePath;
-            AuxFile = Path.Combine(Path.GetDirectoryName(db), Path.GetFileNameWithoutExtension(db) + ".xml");
+
+            mInfo = ctx.DatabaseIOInfo.CloneDeep();
+            string db = mInfo.Path;
+            mInfo.Path = Path.Combine(Path.GetDirectoryName(db), Path.GetFileNameWithoutExtension(db) + ".xml");
 
             try
             {
@@ -104,7 +101,7 @@ namespace KeeChallenge
             return resp;
         }
 
-        private static bool EncryptAndSave(byte[] secret, string file)
+        private bool EncryptAndSave(byte[] secret)
         {
             //generate a random challenge for use next time
             byte[] challenge = GenerateChallenge();
@@ -142,26 +139,20 @@ namespace KeeChallenge
 
             sha.Clear();
             aes.Clear();
-
+                       
             try
             {
-                if (File.Exists(file)) File.Delete(file);
-            }
-            catch (Exception)
-            {
-                MessageService.ShowWarning(String.Format("Error: unable to delete old file {0}. Check directory perissions", file));
-                return false;
-            }
-
-            try
-            {
+                FileTransactionEx ft = new FileTransactionEx(mInfo,
+                    false);
+                Stream s = ft.OpenWrite();
+               
                 XmlWriterSettings settings = new XmlWriterSettings();
                 settings.CloseOutput = true;
                 settings.Indent = true;
                 settings.IndentChars = "\t";
-                settings.NewLineOnAttributes = true;                
+                settings.NewLineOnAttributes = true;
 
-                XmlWriter xml = XmlWriter.Create(file,settings);
+                XmlWriter xml = XmlWriter.Create(s, settings);
                 xml.WriteStartDocument();
                 xml.WriteStartElement("data");
 
@@ -176,13 +167,15 @@ namespace KeeChallenge
                 xml.WriteEndElement();
                 xml.WriteEndDocument();
                 xml.Close();                
+  
+                ft.CommitWrite();  
             }
             catch (Exception)
             {
-                MessageService.ShowWarning(String.Format("Error: unable to write to file {0}. Is the file in use by another process?", file));
+                MessageService.ShowWarning(String.Format("Error: unable to write to file {0}", mInfo.Path));
                 return false;
-            }
-          
+            }      
+
             return true;
         }
 
@@ -228,29 +221,24 @@ namespace KeeChallenge
             return true;
         }
        
-        private static bool ReadEncryptedSecret(string file, out byte[] encryptedSecret, out byte[] challenge, out byte[] iv, out byte[] verification)
+        private bool ReadEncryptedSecret(out byte[] encryptedSecret, out byte[] challenge, out byte[] iv, out byte[] verification)
         {
             encryptedSecret = null;
             iv = null;
             challenge = null;
             verification = null;
 
-            //read file
-            XmlReader xml;
+            XmlReader xml = null;
             try
             {
-                XmlReaderSettings settings = new XmlReaderSettings();
-                settings.CloseInput = true;                
-                xml = XmlReader.Create(file,settings);
-            }
-            catch (Exception) 
-            {
-                MessageService.ShowWarning(String.Format("Error: unable to read file {0}. Reverting to recovery mode.", file)); 
-                return false;
-            }
+                Stream s = IOConnection.OpenRead(mInfo);
 
-            try
-            {
+                //read file
+               
+                XmlReaderSettings settings = new XmlReaderSettings();
+                settings.CloseInput = true;
+                xml = XmlReader.Create(s, settings);
+
                 while (xml.Read())
                 {
                     if (xml.IsStartElement())
@@ -279,11 +267,11 @@ namespace KeeChallenge
             }
             catch (Exception)
             {
-                MessageService.ShowWarning(String.Format("Error: file {0} could not be read correctly. Is the file corrupt? Reverting to recovery mode", file));
+                MessageService.ShowWarning(String.Format("Error: file {0} could not be read correctly. Is the file corrupt? Reverting to recovery mode", mInfo.Path));
                 return false;
             }
-            
-            xml.Close();
+            finally { xml.Close(); }
+
             //if failed, return false
             return true;
         }
@@ -302,9 +290,8 @@ namespace KeeChallenge
             Array.Copy(creator.Secret, secret, creator.Secret.Length); //probably paranoid here, but not a big performance hit
             Array.Clear(creator.Secret, 0, creator.Secret.Length);
 
-            if (!EncryptAndSave(secret,AuxFile))
+            if (!EncryptAndSave(secret))
             {
-                MessageService.ShowWarning(String.Format("Error: unable to save file {0}. No key was created.", AuxFile));
                 return null;
             }
 
@@ -322,10 +309,10 @@ namespace KeeChallenge
             byte[] verification = null;
             byte[] secret = null;
 
-            if (!ReadEncryptedSecret(AuxFile, out encryptedSecret, out challenge, out iv, out verification))
+            if (!ReadEncryptedSecret(out encryptedSecret, out challenge, out iv, out verification))
             {                              
                 secret = RecoveryMode();
-                EncryptAndSave(secret, AuxFile);
+                EncryptAndSave(secret);
                 return secret;
             }
                 //show the dialog box prompting user to press yubikey button
@@ -340,7 +327,7 @@ namespace KeeChallenge
 
             if (DecryptSecret(encryptedSecret, resp, iv, verification, out secret))
             {
-                if (EncryptAndSave(secret,AuxFile))
+                if (EncryptAndSave(secret))
                     return secret;
                 else return null;
             }
