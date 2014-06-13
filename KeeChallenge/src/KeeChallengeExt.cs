@@ -54,10 +54,10 @@ namespace KeeChallenge
 
             m_host = host;
             
-           // int slot = Properties.Settings.Default.YubikeySlot - 1;  //Important: for readability, the slot settings are not zero based. We must account for this during read/save
+            int slot = Properties.Settings.Default.YubikeySlot - 1;  //Important: for readability, the slot settings are not zero based. We must account for this during read/save
             YubiSlot yubiSlot = YubiSlot.SLOT2;
-           // if (Enum.IsDefined(typeof(YubiSlot),slot))
-            //    yubiSlot = (YubiSlot)slot;
+            if (Enum.IsDefined(typeof(YubiSlot),slot))
+                yubiSlot = (YubiSlot)slot;
          
             ToolStripItemCollection tsMenu = m_host.MainWindow.ToolsMenu.DropDownItems;
             m_Separator = new ToolStripSeparator();
