@@ -75,7 +75,7 @@ namespace KeeChallenge
 
             mInfo = ctx.DatabaseIOInfo.CloneDeep();
             string db = mInfo.Path;
-            mInfo.Path = Path.Combine(Path.GetDirectoryName(db), Path.GetFileNameWithoutExtension(db) + ".xml");
+            mInfo.Path = mInfo.Path.Replace(".kdbx", ".xml");
 
             try
             {
@@ -139,12 +139,13 @@ namespace KeeChallenge
 
             sha.Clear();
             aes.Clear();
-                       
+
+            Stream s = null;
             try
             {
                 FileTransactionEx ft = new FileTransactionEx(mInfo,
                     false);
-                Stream s = ft.OpenWrite();
+                s = ft.OpenWrite();
                
                 XmlWriterSettings settings = new XmlWriterSettings();
                 settings.CloseOutput = true;
@@ -174,7 +175,11 @@ namespace KeeChallenge
             {
                 MessageService.ShowWarning(String.Format("Error: unable to write to file {0}", mInfo.Path));
                 return false;
-            }      
+            }    
+            finally
+            {                
+                s.Close();
+            }
 
             return true;
         }
@@ -229,12 +234,13 @@ namespace KeeChallenge
             verification = null;
 
             XmlReader xml = null;
+            Stream s = null;
             try
             {
-                Stream s = IOConnection.OpenRead(mInfo);
+                s = IOConnection.OpenRead(mInfo);
 
                 //read file
-               
+
                 XmlReaderSettings settings = new XmlReaderSettings();
                 settings.CloseInput = true;
                 xml = XmlReader.Create(s, settings);
@@ -270,7 +276,11 @@ namespace KeeChallenge
                 MessageService.ShowWarning(String.Format("Error: file {0} could not be read correctly. Is the file corrupt? Reverting to recovery mode", mInfo.Path));
                 return false;
             }
-            finally { xml.Close(); }
+            finally
+            {
+                xml.Close();
+                s.Close();
+            }
 
             //if failed, return false
             return true;

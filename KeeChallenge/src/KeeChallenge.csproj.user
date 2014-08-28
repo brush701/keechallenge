@@ -6,8 +6,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <StartAction>Program</StartAction>
-    <StartProgram>C:\Users\Ben.Rush\ownCloud\documents\Software Projects\KeeChallenge\KeeChallenge\src\bin\Debug\KeePass.exe</StartProgram>
+    <StartProgram>D:\Documents\KeeChallenge\KeeChallenge\src\bin\Debug\KeePass.exe</StartProgram>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
-    <StartWorkingDirectory>C:\Users\Ben.Rush\ownCloud\documents\Software Projects\KeeChallenge\KeeChallenge\src\bin\Debug\</StartWorkingDirectory>
+    <StartWorkingDirectory>
+    </StartWorkingDirectory>
   </PropertyGroup>
 </Project>
