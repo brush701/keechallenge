@@ -115,16 +115,24 @@ namespace KeeChallenge
             progressBar.Value = 15;
 
             yubi = new YubiWrapper();
-            while (!yubi.Init())
+            try
             {
-                YubiPrompt prompt = new YubiPrompt();
-                if (prompt.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+                while (!yubi.Init())
                 {
-                    DialogResult = System.Windows.Forms.DialogResult.Abort;
-                    return;
+                    YubiPrompt prompt = new YubiPrompt();
+                    if (prompt.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+                    {
+                        DialogResult = System.Windows.Forms.DialogResult.Abort;
+                        return;
+                    }
                 }
             }
-
+            catch (PlatformNotSupportedException err)
+            {
+                Debug.Assert(false);
+                MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK);
+                return;
+            }
             //spawn background countdown timer
             countdown = new System.Windows.Forms.Timer();
             countdown.Tick += Countdown;
@@ -139,9 +147,15 @@ namespace KeeChallenge
 
         private void OnFormClosed(object sender, FormClosedEventArgs e)
         {
-            countdown.Enabled = false;
-            countdown.Dispose();
-            yubi.Close();
+            if (countdown != null)
+            {
+                countdown.Enabled = false;
+                countdown.Dispose();
+            }
+            if (yubi != null)
+            {
+                yubi.Close();
+            }
             GlobalWindowManager.RemoveWindow(this);
         }
     }

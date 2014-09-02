@@ -1,7 +1,14 @@
-KeeChallenge v1.0.2
+KeeChallenge v1.1
 Copyright 2014 Ben Rush
 
 CHANGES
+v1.1
+-Changed release numbering scheme to major.minor
+-Added support for OpenURL function
+-Persisted slot choice
+-Provide support for 32 bit systems
+-Windows installs require XP SP1 or higher
+-Fixed null reference error on cancellation
 v1.0.2
 -Added support for choosing Yubikey slot via Tools->KeeChallenge Settings. Default is slot 2
 -Added plugin update checking
@@ -19,7 +26,7 @@ BUILDING
 Open the top level solution and adjust the references to point at your installed Keepass.exe. It should (hopefully) build without problems once this is done. You should check that the DllImport statements in Yubiwrapper.cs match the file names of the binaries you have obtained. 
 
 RUNNING
-Copy KeeChallenge.dll and all the Yubico libraries and dependencies into the directory containing Keepass.exe. The plugin should be loaded as a key provider when creating/chainging your database password.
+Copy KeeChallenge.dll and the "32bit" and "64bit" subdirectories containing all the Yubico libraries and dependencies into the directory containing Keepass.exe. The plugin should be loaded as a key provider when creating/chainging your database password.
 
 USING
 KeeChallenge works using the HMAC-SHA1 challenge response functionality built into the Yubikey. First, configure your Yubikey to use HMAC-SHA1 in slot 2. Ensure that the challenge is set to fixed 64 byte (the yubikey does some odd formatting games when a variable length is used, so that's unsupported at the moment). I recommend requiring a button press to issue the response, but it should work either way. Copy the secret and keep it somewhere safe since you'll need it to recover your database if you lose your yubikey. 

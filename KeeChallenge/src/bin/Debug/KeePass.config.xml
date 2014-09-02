@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<Configuration xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Meta>
 		<PreferUserConfiguration>false</PreferUserConfiguration>
 		<OmitItemsWithDefaultValues>true</OmitItemsWithDefaultValues>
 	</Meta>
 	<Application>
-		<LastUpdateCheck>2014-03-04T18:19:30Z</LastUpdateCheck>
+		<LastUpdateCheck>2014-08-29T16:39:16Z</LastUpdateCheck>
 		<LastUsedFile>
-			<Path>D:\Documents\NewDatabase.kdbx</Path>
+			<Path>..\..\..\..\..\..\Dropbox\Apps\Keepass2Android\RushPasswords.kdbx</Path>
 			<CredProtMode>Obf</CredProtMode>
 			<CredSaveMode>NoSave</CredSaveMode>
 		</LastUsedFile>
@@ -15,7 +15,12 @@
 			<MaxItemCount>12</MaxItemCount>
 			<Items>
 				<ConnectionInfo>
-					<Path>D:\Documents\NewDatabase.kdbx</Path>
+					<Path>..\..\..\..\..\..\Dropbox\Apps\Keepass2Android\RushPasswords.kdbx</Path>
+					<CredProtMode>Obf</CredProtMode>
+					<CredSaveMode>NoSave</CredSaveMode>
+				</ConnectionInfo>
+				<ConnectionInfo>
+					<Path>..\..\..\..\..\NewDatabase.kdbx</Path>
 					<CredProtMode>Obf</CredProtMode>
 					<CredSaveMode>NoSave</CredSaveMode>
 				</ConnectionInfo>
@@ -25,14 +30,14 @@
 					<CredSaveMode>NoSave</CredSaveMode>
 				</ConnectionInfo>
 				<ConnectionInfo>
-					<Path>D:\Documents\RushPasswords.kdbx</Path>
+					<Path>..\..\..\..\..\RushPasswords.kdbx</Path>
 					<CredProtMode>Obf</CredProtMode>
 					<CredSaveMode>NoSave</CredSaveMode>
 				</ConnectionInfo>
 			</Items>
 		</MostRecentlyUsed>
 		<WorkingDirectories>
-			<Item>Database@D:\Documents</Item>
+			<Item>Database@..\..\..\..\..\..\Dropbox\Apps\Keepass2Android</Item>
 			<Item>Import@..\..\Users\Ben.Rush\Desktop</Item>
 		</WorkingDirectories>
 		<Start>
@@ -51,7 +56,7 @@
 		<Y>533</Y>
 		<Width>670</Width>
 		<Height>524</Height>
-		<SplitterHorizontalFrac>0.826506</SplitterHorizontalFrac>
+		<SplitterHorizontalFrac>0.826086938</SplitterHorizontalFrac>
 		<SplitterVerticalFrac>0.250764519</SplitterVerticalFrac>
 		<Layout>Default</Layout>
 		<CloseButtonMinimizesWindow>true</CloseButtonMinimizesWindow>
@@ -153,7 +158,11 @@
 		</SearchParameters>
 		<KeySources>
 			<Association>
-				<DatabasePath>D:\Documents\NewDatabase.kdbx</DatabasePath>
+				<DatabasePath>..\..\..\..\..\NewDatabase.kdbx</DatabasePath>
+				<KeyProvider>Yubikey challenge-response</KeyProvider>
+			</Association>
+			<Association>
+				<DatabasePath>..\..\..\..\..\..\Dropbox\Apps\Keepass2Android\RushPasswords.kdbx</DatabasePath>
 				<KeyProvider>Yubikey challenge-response</KeyProvider>
 			</Association>
 		</KeySources>

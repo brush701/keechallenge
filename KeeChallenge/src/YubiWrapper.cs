@@ -22,7 +22,9 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Windows.Forms;
-
+using System.Security;
+using System.Runtime.ConstrainedExecution;
+using System.IO;
 
 namespace KeeChallenge
 {
@@ -36,6 +38,39 @@ namespace KeeChallenge
     {
         public const uint yubiRespLen = 20;
         private const uint yubiBuffLen = 64;
+
+        private List<string> nativeDLLs =  new List<string>() { "libykpers-1-1.dll", "libyubikey-0.dll", "libjson-0.dll", "libjson-c-2.dll" };
+
+        private static bool is64BitProcess = (IntPtr.Size == 8);
+
+        private static bool IsLinux
+        {
+            get
+            {
+                int p = (int)Environment.OSVersion.Platform;
+                return (p == 4) || (p == 6) || (p == 128);
+            }
+        }
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern bool SetDllDirectory(string lpPathName);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
+        private static extern IntPtr GetProcAddress(IntPtr hModule, string methodName);
+
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail), DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr GetModuleHandle(string moduleName);
+
+        [SecurityCritical]
+        internal static bool DoesWin32MethodExist(string moduleName, string methodName)
+        {
+            IntPtr moduleHandle = GetModuleHandle(moduleName);
+            if (moduleHandle == IntPtr.Zero)
+            {
+                return false;
+            }
+            return (GetProcAddress(moduleHandle, methodName) != IntPtr.Zero);
+        }
         
         private static ReadOnlyCollection<byte> slots = new ReadOnlyCollection<byte>(new List<byte>()
         {
@@ -43,22 +78,46 @@ namespace KeeChallenge
             0x38  //SLOT_CHAL_HMAC2
         });
 
-        private IntPtr yk;
+        private IntPtr yk = IntPtr.Zero;
 
         public bool Init()
         {
-           try
-           {
-            if (yk_init() != 1) return false;
-            yk = yk_open_first_key();
-            if (yk == IntPtr.Zero) return false;
-           }
-           catch (Exception)
-           {
-                Debug.Assert(false);
-                MessageBox.Show("Error connecting to yubikey!", "Error", MessageBoxButtons.OK);
+            try
+            { 
+                if (!IsLinux) //no DLL Hell on Linux!
+                {     
+                    foreach (string s in nativeDLLs) //support upgrading from installs of versions 1.0.2 and prior
+                    {
+                        string path = Path.Combine(Environment.CurrentDirectory, s);
+                        if (File.Exists(path)) //prompt the user to do it to avoid permissions issues
+                        {
+                            try
+                            {
+                                File.Delete(path);
+                            }
+                            catch (Exception)
+                            {
+                                string warn = "Please login as an administrator and delete the following files from " + Environment.CurrentDirectory + ":\n" + string.Join("\n", nativeDLLs.ToArray());
+                                MessageBox.Show(warn);
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!DoesWin32MethodExist("kernel32.dll", "SetDllDirectoryW")) throw new PlatformNotSupportedException("KeeChallenge requires Windows XP Service Pack 1 or greater");
+                    if (!is64BitProcess) SetDllDirectory(Path.Combine(Environment.CurrentDirectory, "32bit"));
+                    else SetDllDirectory(Path.Combine(Environment.CurrentDirectory, "64bit"));
+                }
+                if (yk_init() != 1) return false;
+                yk = yk_open_first_key();
+                if (yk == IntPtr.Zero) return false;
+            }
+            catch (Exception)
+            {
+                Debug.Assert(false);         
+                MessageBox.Show("Error connecting to yubikey!", "Error", MessageBoxButtons.OK);               
                 return false;
-           }
+            }
            return true;
         }
 
@@ -94,12 +153,13 @@ namespace KeeChallenge
 
         public void Close()
         {
-            bool ret = false;
             if (yk != IntPtr.Zero)
-                ret = YubiWrapper.yk_close_key(yk) == 1;
-            if (!ret || YubiWrapper.yk_release() != 1)
             {
-                throw new Exception("Error closing Yubikey");
+                bool ret = YubiWrapper.yk_close_key(yk) == 1;
+                if (!ret || YubiWrapper.yk_release() != 1)
+                {
+                    throw new Exception("Error closing Yubikey");
+                }
             }
         }
     }

@@ -23,6 +23,7 @@ using System.Text;
 using System.Security.Cryptography;
 using System.Diagnostics;
 using System.Xml;
+using System.Text.RegularExpressions;
 
 using KeePassLib.Keys;
 using KeePassLib.Utility;
@@ -75,7 +76,15 @@ namespace KeeChallenge
 
             mInfo = ctx.DatabaseIOInfo.CloneDeep();
             string db = mInfo.Path;
-            mInfo.Path = mInfo.Path.Replace(".kdbx", ".xml");
+            Regex rgx = new Regex(@"\.kdbx$");
+            mInfo.Path = rgx.Replace(db, ".xml");
+
+            if (Object.ReferenceEquals(db,mInfo.Path)) //no terminating .kdbx found-> maybe using keepass 1? should never happen...
+            {
+                MessageService.ShowWarning("Invalid database. KeeChallenge only works with .kdbx files.");
+                return null;
+            }
+
 
             try
             {
