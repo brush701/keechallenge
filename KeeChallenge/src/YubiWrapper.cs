@@ -99,17 +99,26 @@ namespace KeeChallenge
                             {
                                 string warn = "Please login as an administrator and delete the following files from " + Environment.CurrentDirectory + ":\n" + string.Join("\n", nativeDLLs.ToArray());
                                 MessageBox.Show(warn);
-                                break;
+                                return false;
                             }
                         }
                     }
 
+
                     if (!DoesWin32MethodExist("kernel32.dll", "SetDllDirectoryW")) throw new PlatformNotSupportedException("KeeChallenge requires Windows XP Service Pack 1 or greater");
                     string appDir = Path.GetDirectoryName(Application.ExecutablePath);
+                    string _32BitDir = Path.Combine(appDir, "32bit");
+                    string _64BitDir = Path.Combine(appDir, "64bit");
+                    if (!Directory.Exists(_32BitDir) || !Directory.Exists(_64BitDir))
+                    {
+                        string err = String.Format("Error: one of the following directories is missing:\n{0}\n{1}\nPlease reinstall KeeChallenge and ensure that these directories are present", _32BitDir, _64BitDir);
+                        MessageBox.Show(err);
+                        return false;
+                    }
                     if (!is64BitProcess) 
-                        SetDllDirectory(Path.Combine(appDir, "32bit"));
+                        SetDllDirectory(_32BitDir);
                     else
-                        SetDllDirectory(Path.Combine(appDir, "64bit"));
+                        SetDllDirectory(_64BitDir);
                 }
                 if (yk_init() != 1) return false;
                 yk = yk_open_first_key();
