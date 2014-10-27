@@ -52,6 +52,17 @@ namespace KeeChallenge
             }
         }
 
+        public static string AssemblyDirectory
+        {
+            get
+            {
+                string codeBase = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                string path = Uri.UnescapeDataString(uri.Path);
+                return Path.GetDirectoryName(path);
+            }
+        }
+
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         static extern bool SetDllDirectory(string lpPathName);
 
@@ -106,9 +117,9 @@ namespace KeeChallenge
 
 
                     if (!DoesWin32MethodExist("kernel32.dll", "SetDllDirectoryW")) throw new PlatformNotSupportedException("KeeChallenge requires Windows XP Service Pack 1 or greater");
-                    string appDir = Path.GetDirectoryName(Application.ExecutablePath);
-                    string _32BitDir = Path.Combine(appDir, "32bit");
-                    string _64BitDir = Path.Combine(appDir, "64bit");
+                    
+                    string _32BitDir = Path.Combine(AssemblyDirectory, "32bit");
+                    string _64BitDir = Path.Combine(AssemblyDirectory, "64bit");
                     if (!Directory.Exists(_32BitDir) || !Directory.Exists(_64BitDir))
                     {
                         string err = String.Format("Error: one of the following directories is missing:\n{0}\n{1}\nPlease reinstall KeeChallenge and ensure that these directories are present", _32BitDir, _64BitDir);
