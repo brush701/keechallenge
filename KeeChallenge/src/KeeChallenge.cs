@@ -287,8 +287,10 @@ namespace KeeChallenge
             }
             finally
             {
-                xml.Close();
-                s.Close();
+                if (xml != null)
+                    xml.Close();
+                if (s != null)
+                    s.Close();
             }
 
             //if failed, return false
@@ -329,7 +331,7 @@ namespace KeeChallenge
             byte[] secret = null;
 
             if (!ReadEncryptedSecret(out encryptedSecret, out challenge, out iv, out verification))
-            {                              
+            {
                 secret = RecoveryMode();
                 EncryptAndSave(secret);
                 return secret;
@@ -339,7 +341,16 @@ namespace KeeChallenge
             KeyEntry entryForm = new KeyEntry(challenge,YubikeySlot);
             
             if (entryForm.ShowDialog() != System.Windows.Forms.DialogResult.OK)
-                return null;
+            {
+                if (entryForm.RecoveryMode)
+                {
+                    secret = RecoveryMode();
+                    EncryptAndSave(secret);
+                    return secret;
+                }
+
+                else return null;                
+            }               
 
             entryForm.Response.CopyTo(resp,0);
             Array.Clear(entryForm.Response,0,entryForm.Response.Length);

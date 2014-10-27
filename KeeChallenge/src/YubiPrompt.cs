@@ -34,6 +34,21 @@ namespace KeeChallenge
             InitializeComponent();
 
             Icon = Icon.FromHandle(Properties.Resources.yubikey.GetHicon());
+
+            RecoveryMode = false;
         }
+
+        public bool RecoveryMode
+        {
+            get;
+            private set;
+        }
+
+        private void RecoveryButton_Click(object sender, EventArgs e)
+        {
+            RecoveryMode = true;
+            this.Close();
+        }
+        
     }
 }

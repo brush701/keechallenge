@@ -54,6 +54,11 @@ namespace KeeChallenge
             set { m_challenge = value; }
         }
 
+        public bool RecoveryMode
+        {
+            get;
+            private set;
+        }
 
         public KeyEntry()
         {
@@ -62,6 +67,7 @@ namespace KeeChallenge
             Response = new byte[YubiWrapper.yubiRespLen];
             Challenge = null;
             yubiSlot = YubiSlot.SLOT2;
+            RecoveryMode = false;
             Icon = Icon.FromHandle(Properties.Resources.yubikey.GetHicon());
         }
 
@@ -120,8 +126,10 @@ namespace KeeChallenge
                 while (!yubi.Init())
                 {
                     YubiPrompt prompt = new YubiPrompt();
-                    if (prompt.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+                    DialogResult res =  prompt.ShowDialog();
+                    if (res != System.Windows.Forms.DialogResult.Retry)
                     {
+                        RecoveryMode = prompt.RecoveryMode;
                         DialogResult = System.Windows.Forms.DialogResult.Abort;
                         return;
                     }
