@@ -105,16 +105,19 @@ namespace KeeChallenge
                     }
 
                     if (!DoesWin32MethodExist("kernel32.dll", "SetDllDirectoryW")) throw new PlatformNotSupportedException("KeeChallenge requires Windows XP Service Pack 1 or greater");
-                    if (!is64BitProcess) SetDllDirectory(Path.Combine(Environment.CurrentDirectory, "32bit"));
-                    else SetDllDirectory(Path.Combine(Environment.CurrentDirectory, "64bit"));
+                    string appDir = Path.GetDirectoryName(Application.ExecutablePath);
+                    if (!is64BitProcess) 
+                        SetDllDirectory(Path.Combine(appDir, "32bit"));
+                    else
+                        SetDllDirectory(Path.Combine(appDir, "64bit"));
                 }
                 if (yk_init() != 1) return false;
                 yk = yk_open_first_key();
                 if (yk == IntPtr.Zero) return false;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Debug.Assert(false);         
+                Debug.Assert(false,e.Message);         
                 MessageBox.Show("Error connecting to yubikey!", "Error", MessageBoxButtons.OK);               
                 return false;
             }
