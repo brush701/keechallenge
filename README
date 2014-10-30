@@ -2,6 +2,9 @@ KeeChallenge v1.1
 Copyright 2014 Ben Rush
 
 CHANGES
+v1.2
+-Bug fixes for dynamic 32/64 bit support
+-Added button for recovery mode and fixed a bug
 v1.1
 -Changed release numbering scheme to major.minor
 -Added support for OpenURL function
