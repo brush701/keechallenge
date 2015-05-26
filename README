@@ -1,8 +1,14 @@
-KeeChallenge v1.3
+KeeChallenge v1.4
 Copyright 2014 Ben Rush
 
 CHANGES
+v1.4
+-Added support for variable length challenges. To use it, a new composite master key must be created.
+-MD5 Checksum: 7C2F5D8CCBE9549767CA15DE0FBF7383
+-SHA1 Checksum: BE00768E0279B9206A5A73A143B54AB77F29093A
 v1.3
+-MD5 Checksum: 21112DB3FE7AD688FD0DEA4B3738F90A
+-SHA1 Checksum: D61CCAC053EFAF112D60D0C0DA4683638B8FE1F9
 -Added OSX support. Thanks to Markku Roponen for figuring this out!
 -Updated Yubico libraries to v1.16.2 to support Yubikey Neo firmware 3.3.0
 v1.2
@@ -45,3 +51,5 @@ If the xml file gets corrupted or deleted (or if you lose your yubikey) a recove
 
 KeeChallenge is not intended to be used as the sole means of authenticating yourself to Keepass. It's entirely vulnerable to physical attacks: if you are only using your Yubikey to login and somebody steals it, your database will be compromised. You should always use KeeChallenge in conjunction with a strong master password to mitigate this risk. This also allows us to take advantage of Keepass' built in protections against brute forcing.
 
+COMMON ERRORS
+Users occasionally report that KeeChallenge does not work with a new version of Keepass. This occurs immediately after an update to Keepass and is easily identified by the warning message: "The following plugin is incompatible with the current Keepass version...". This error is caused by an out of date version of the file KeePass.exe.config, which lives in the Keepass install directory. The problem can be most reliably resolved by doing a complete uninstall/reinstall of Keepass. Alternatively, you can download the portable version of Keepass and copy the config file from there into your Keepass install directory.

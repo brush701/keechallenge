@@ -37,6 +37,7 @@ namespace KeeChallenge
         private byte[] m_response;
         private YubiWrapper yubi;
         private YubiSlot yubiSlot;
+        private KeeChallengeProv m_parent;
         
         private bool success;
 
@@ -60,24 +61,26 @@ namespace KeeChallenge
             private set;
         }
 
-        public KeyEntry()
+        public KeyEntry(KeeChallengeProv parent)
         {
             InitializeComponent();
+            m_parent = parent;
             success = false;
             Response = new byte[YubiWrapper.yubiRespLen];
             Challenge = null;
-            yubiSlot = YubiSlot.SLOT2;
+            yubiSlot = parent.YubikeySlot;
             RecoveryMode = false;
             Icon = Icon.FromHandle(Properties.Resources.yubikey.GetHicon());
         }
 
-        public KeyEntry(byte[] challenge, YubiSlot slot)
+        public KeyEntry(KeeChallengeProv parent, byte[] challenge)
         {
             InitializeComponent();
+            m_parent = parent;
             success = false;
             Response = new byte[YubiWrapper.yubiRespLen];
             Challenge = challenge;
-            yubiSlot = slot;
+            yubiSlot = parent.YubikeySlot;
 
             Icon = Icon.FromHandle(Properties.Resources.yubikey.GetHicon());
         }

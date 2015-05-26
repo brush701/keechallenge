@@ -58,7 +58,7 @@ namespace KeeChallenge
             YubiSlot yubiSlot = YubiSlot.SLOT2;
             if (Enum.IsDefined(typeof(YubiSlot),slot))
                 yubiSlot = (YubiSlot)slot;
-         
+
             ToolStripItemCollection tsMenu = m_host.MainWindow.ToolsMenu.DropDownItems;
             m_Separator = new ToolStripSeparator();
             tsMenu.Add(m_Separator);
@@ -99,7 +99,7 @@ namespace KeeChallenge
                     Properties.Settings.Default.YubikeySlot = 1;
                 else if (m_YubiSlot2.Checked)
                     Properties.Settings.Default.YubikeySlot = 2;
-
+                
                 Properties.Settings.Default.Save();
 
                 ToolStripItemCollection tsMenu = m_host.MainWindow.ToolsMenu.DropDownItems;

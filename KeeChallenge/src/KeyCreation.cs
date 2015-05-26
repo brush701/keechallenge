@@ -37,20 +37,22 @@ namespace KeeChallenge
             private set;
         }
 
-        public YubiSlot slot;
+        private KeeChallengeProv m_parent;
 
-        public KeyCreation()
+        public KeyCreation(KeeChallengeProv parent)
         {
             InitializeComponent();
             Secret = null;
             Icon = Icon.FromHandle(Properties.Resources.yubikey.GetHicon());
-            slot = YubiSlot.SLOT2;
+            m_parent = parent;
         }
   
         public void OnClosing(object o, FormClosingEventArgs e)
         {
             if (DialogResult == DialogResult.OK)
             {
+                m_parent.LT64 = LT64_cb.Checked;
+
                 Secret = new byte[KeeChallengeProv.secretLenBytes];
                 secretTextBox.Text = secretTextBox.Text.Replace(" ", string.Empty); //remove spaces
                 
@@ -71,8 +73,8 @@ namespace KeeChallenge
                 }
                 
                 //Confirm they have a key whose secret matches this
-                byte[] challenge = KeeChallengeProv.GenerateChallenge();                
-                KeyEntry validate = new KeyEntry(challenge, slot);               
+                byte[] challenge = m_parent.GenerateChallenge();                
+                KeyEntry validate = new KeyEntry(m_parent, challenge);               
                 
                 if ( validate.ShowDialog(this) != DialogResult.OK)
                 {
@@ -82,7 +84,7 @@ namespace KeeChallenge
                     return;
                 }
 
-                byte[] validResp = KeeChallengeProv.GenerateResponse(challenge, Secret);
+                byte[] validResp = m_parent.GenerateResponse(challenge, Secret);
                 
                 for (int i = 0; i < validate.Response.Length; i++)
                 {

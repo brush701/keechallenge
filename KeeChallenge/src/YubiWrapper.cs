@@ -158,7 +158,7 @@ namespace KeeChallenge
 
         [DllImport("libykpers-1-1.dll")]
         private static extern int yk_challenge_response(IntPtr yk, byte yk_cmd, int may_block, uint challenge_len, byte[] challenge, uint response_len, byte[] response);
-
+               
         public bool ChallengeResponse(YubiSlot slot, byte[] challenge, out byte[] response)
         {
             response = new byte[yubiRespLen];

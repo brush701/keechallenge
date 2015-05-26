@@ -24,6 +24,7 @@ using System.Security.Cryptography;
 using System.Diagnostics;
 using System.Xml;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 using KeePassLib.Keys;
 using KeePassLib.Utility;
@@ -39,6 +40,15 @@ namespace KeeChallenge
         public const int keyLenBytes = 20;
         public const int challengeLenBytes = 64;
         public const int secretLenBytes = 20;
+        private bool m_LT64 = false;
+
+        //If variable length challenges are enabled, a 63 byte challenge is sent instead.
+        //See GenerateChallenge() and http://forum.yubico.com/viewtopic.php?f=16&t=1078
+        public bool LT64
+        {
+            get { return m_LT64; }
+            set { m_LT64 = value; }
+        }
 
         public YubiSlot YubikeySlot
         {
@@ -96,15 +106,25 @@ namespace KeeChallenge
             return null;
         }
 
-        public static byte[] GenerateChallenge()
+        public byte[] GenerateChallenge()
         {
             CryptoRandom rand = CryptoRandom.Instance;
-            return CryptoRandom.Instance.GetRandomBytes(challengeLenBytes);            
+            byte[] chal =  CryptoRandom.Instance.GetRandomBytes(challengeLenBytes);  
+            if (LT64)
+            {
+                chal[challengeLenBytes - 2] = (byte)~chal[challengeLenBytes - 1];
+            }
+
+            return chal;
         }
 
-        public static byte[] GenerateResponse(byte[] challenge, byte[] key)
+        public byte[] GenerateResponse(byte[] challenge, byte[] key)
         {
             HMACSHA1 hmac = new HMACSHA1(key);
+
+            if (LT64)
+                challenge = challenge.Take(challengeLenBytes - 1).ToArray();
+
             byte[] resp = hmac.ComputeHash(challenge);
             hmac.Clear();
             return resp;
@@ -173,6 +193,7 @@ namespace KeeChallenge
 
                 xml.WriteElementString("challenge", Convert.ToBase64String(challenge));
                 xml.WriteElementString("verification", Convert.ToBase64String(secretHash));
+                xml.WriteElementString("lt64", LT64.ToString());
 
                 xml.WriteEndElement();
                 xml.WriteEndDocument();
@@ -241,6 +262,8 @@ namespace KeeChallenge
             iv = null;
             challenge = null;
             verification = null;
+            
+            LT64 = false; //default to false if not found
 
             XmlReader xml = null;
             Stream s = null;
@@ -253,7 +276,7 @@ namespace KeeChallenge
                 XmlReaderSettings settings = new XmlReaderSettings();
                 settings.CloseInput = true;
                 xml = XmlReader.Create(s, settings);
-
+                
                 while (xml.Read())
                 {
                     if (xml.IsStartElement())
@@ -276,6 +299,11 @@ namespace KeeChallenge
                                 xml.Read();
                                 verification = Convert.FromBase64String(xml.Value.Trim());
                                 break;
+                            case "lt64":
+                                xml.Read();
+                                if (!bool.TryParse(xml.Value.Trim(), out m_LT64)) throw new Exception("Unable to parse LT64 flag");
+                                break;
+
                         }
                     }
                 }
@@ -301,8 +329,7 @@ namespace KeeChallenge
         {
             //show the entry dialog for the secret
             //get the secret
-            KeyCreation creator = new KeyCreation();
-            creator.slot = YubikeySlot;
+            KeyCreation creator = new KeyCreation(this);
 
             if (creator.ShowDialog() != System.Windows.Forms.DialogResult.OK) return null;
 
@@ -338,7 +365,7 @@ namespace KeeChallenge
             }
                 //show the dialog box prompting user to press yubikey button
             byte[] resp = new byte[YubiWrapper.yubiRespLen];
-            KeyEntry entryForm = new KeyEntry(challenge,YubikeySlot);
+            KeyEntry entryForm = new KeyEntry(this, challenge);
             
             if (entryForm.ShowDialog() != System.Windows.Forms.DialogResult.OK)
             {
