@@ -38,7 +38,7 @@
 
         <p>Your secret is used as the key to encrypt the database. In order to avoid storing the secret in plain text, we generate a challenge-response pair ahead of time. The challenge is stored to be issued on the next login and the response is used as an AES256 key to encrypt the secret. All relevant data is stored in a xml file in the same directory as your database.</p>
 
-        <p>If the xml file gets corrupted or deleted (or if you lose your Yubikey) a recovery mode is provided to allow you to enter your secret (you did save it, didn't you?) and decrypt the database.</p>
+        <p>If the xml file gets corrupted or deleted (or if you lose your Yubikey) a recovery mode is provided to allow you to enter your secret (<i>you did save it, didn't you?</i>) and decrypt the database.</p>
 
         <p>KeeChallenge is not intended to be used as the sole means of authenticating yourself to KeePass. It's entirely vulnerable to physical attacks: if you are only using your Yubikey to login and somebody steals it, your database will be compromised. You should always use KeeChallenge in conjunction with a strong master password to mitigate this risk. This also allows us to take advantage of KeePass' built in protections against brute forcing.</p>
 
