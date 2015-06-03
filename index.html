@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <title>KeeChallenge</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+</head>
+<body>
+    <section class="page-header">
+        <h1 class="project-name">KeeChallenge</h1>
+        <h2 class="project-tagline">A plugin for KeePass2 to add Yubikey challenge-response capability.</h2>
+        <a href="https://github.com/brush701/keechallenge" class="btn">View on GitHub</a>
+    </section>
+    <section class="main-content">
+        <h3><a id="supported-platforms" class="anchor" href="#supported-platforms" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supported Platforms</h3>
+
+        <p>As of v1.0.1 both Windows and Linux (Ubuntu) have been tested successfully.</p>
+
+        <p>To run under Linux using mono, you must modify <code>KeeChallenge.dll.config</code> and add a dllmap entry to let Mono know where to find the native libraries. On my system this looks like <code>&lt;dllmap dll="libykpers-1-1.dll" target="libykpers-1.so&gt;</code>. For this to work, you must also obtain the appropriate versions of the Yubico libraries. Make sure all of the Yubico libraries are installed where mono can find them (for example, <code>/usr/lib</code>). Put both <code>KeeChallenge.dll</code> and <code>KeeChallenge.dll.config</code> in the KeePass2 folder (on Ubuntu this is <code>/usr/lib/keepass2</code>). The same technique will work on OSX, but getting the 32bit Yubico libraries requires building from source. See the OSX Guide by Markku for detailed instructions on how to do this.</p>
+
+        <h3><a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies</h3>
+
+        <p>KeeChallenge requires KeePass2, available from <a href='http://keepass.info/download.html'>http://keepass.info/download.html</a>. It also requires the Yubico open source library yubico-personalization (which in turn depends on yubico-c). Prebuilt bundled binaries are available from <a href='http://opensource.yubico.com/yubikey-personalization/releases.html'>http://opensource.yubico.com/yubikey-personalization/releases.html</a>.</p>
+
+        <h3><a id="building" class="anchor" href="#building" aria-hidden="true"><span class="octicon octicon-link"></span></a>Building</h3>
+
+        <p>Open the top level solution and adjust the references to point at your installed <code>KeePass.exe</code>. It should (hopefully) build without problems once this is done. You should check that the DllImport statements in Yubiwrapper.cs match the file names of the binaries you have obtained.</p>
+
+        <h3><a id="using" class="anchor" href="#using" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using</h3>
+
+        <p>KeeChallenge works using the HMAC-SHA1 challenge response functionality built into the Yubikey. First, configure your Yubikey to use HMAC-SHA1 in slot 2. Ensure that the challenge is set to fixed 64 byte (the Yubikey does some odd formatting games when a variable length is used, so that's unsupported at the moment). I recommend requiring a button press to issue the response, but it should work either way. Copy the secret and keep it somewhere safe since you'll need it to recover your database if you lose your Yubikey.</p>
+
+        <p>When you set the password on your database, you should select Yubikey challenge-response under key providers and click ok. In the window that comes up, copy and paste the secret from your Yubikey. You will be prompted to insert your Yubikey and press the button to verify that you entered the correct secret.</p>
+
+        <p>Your secret is used as the key to encrypt the database. In order to avoid storing the secret in plain text, we generate a challenge-response pair ahead of time. The challenge is stored to be issued on the next login and the response is used as an AES256 key to encrypt the secret. All relevant data is stored in a xml file in the same directory as your database.</p>
+
+        <p>If the xml file gets corrupted or deleted (or if you lose your Yubikey) a recovery mode is provided to allow you to enter your secret (<i>you did save it, didn't you?</i>) and decrypt the database.</p>
+
+        <p>KeeChallenge is not intended to be used as the sole means of authenticating yourself to KeePass. It's entirely vulnerable to physical attacks: if you are only using your Yubikey to login and somebody steals it, your database will be compromised. You should always use KeeChallenge in conjunction with a strong master password to mitigate this risk. This also allows us to take advantage of KeePass' built in protections against brute forcing.</p>
+
+        <h3><a id="common-errors" class="anchor" href="#common-errors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Common Errors</h3>
+
+        <p>Users occasionally report that KeeChallenge does not work with a new version of KeePass. This occurs immediately after an update to KeePass and is easily identified by the warning message: "The following plugin is incompatible with the current KeePass version...". This error is caused by an out of date version of the file <code>KeePass.exe.config</code>, which lives in the KeePass install directory. The problem can be most reliably resolved by doing a complete uninstall/reinstall of KeePass. Alternatively, you can download the portable version of KeePass and copy the config file from there into your KeePass install directory.</p>
+        <footer class="site-footer">
+            <span class="site-footer-owner"><a href="https://github.com/brush701/keechallenge">KeeChallenge</a> is maintained by <a href="https://github.com/brush701">brush701</a>.</span>
+
+            <span class="site-footer-credits">This page is based on the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by Jason Long.</span>
+        </footer>
+    </section>
+</body>
+</html>
