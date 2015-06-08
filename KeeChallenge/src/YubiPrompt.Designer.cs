@@ -41,7 +41,7 @@
             this.promptLabel.Name = "promptLabel";
             this.promptLabel.Size = new System.Drawing.Size(146, 13);
             this.promptLabel.TabIndex = 0;
-            this.promptLabel.Text = "Unable to connect to yubikey";
+            this.promptLabel.Text = "Unable to connect to Yubikey";
             // 
             // OKButton
             // 
