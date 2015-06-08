@@ -50,7 +50,7 @@
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(75, 23);
             this.OKButton.TabIndex = 1;
-            this.OKButton.Text = "Retry";
+            this.OKButton.Text = "&Retry";
             this.OKButton.UseVisualStyleBackColor = true;
             // 
             // CancelButton1
@@ -60,7 +60,7 @@
             this.CancelButton1.Name = "CancelButton1";
             this.CancelButton1.Size = new System.Drawing.Size(75, 23);
             this.CancelButton1.TabIndex = 2;
-            this.CancelButton1.Text = "Cancel";
+            this.CancelButton1.Text = "&Cancel";
             this.CancelButton1.UseVisualStyleBackColor = true;
             // 
             // RecoveryButton
@@ -69,7 +69,7 @@
             this.RecoveryButton.Name = "RecoveryButton";
             this.RecoveryButton.Size = new System.Drawing.Size(117, 23);
             this.RecoveryButton.TabIndex = 3;
-            this.RecoveryButton.Text = "Recovery Mode";
+            this.RecoveryButton.Text = "Recovery &Mode";
             this.RecoveryButton.UseVisualStyleBackColor = true;
             this.RecoveryButton.Click += new System.EventHandler(this.RecoveryButton_Click);
             // 
