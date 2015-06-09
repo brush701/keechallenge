@@ -57,7 +57,7 @@
             this.OKButton.Location = new System.Drawing.Point(181, 108);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(75, 23);
-            this.OKButton.TabIndex = 2;
+            this.OKButton.TabIndex = 3;
             this.OKButton.Text = "&OK";
             this.OKButton.UseVisualStyleBackColor = true;
             // 
@@ -67,7 +67,7 @@
             this.CancelButton1.Location = new System.Drawing.Point(262, 108);
             this.CancelButton1.Name = "CancelButton1";
             this.CancelButton1.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton1.TabIndex = 3;
+            this.CancelButton1.TabIndex = 4;
             this.CancelButton1.Text = "&Cancel";
             this.CancelButton1.UseVisualStyleBackColor = true;
             // 
@@ -78,7 +78,7 @@
             this.LT64_cb.Location = new System.Drawing.Point(181, 66);
             this.LT64_cb.Name = "LT64_cb";
             this.LT64_cb.Size = new System.Drawing.Size(156, 17);
-            this.LT64_cb.TabIndex = 4;
+            this.LT64_cb.TabIndex = 2;
             this.LT64_cb.Text = "Variable Length Challenge?";
             this.LT64_cb.UseVisualStyleBackColor = true;
             // 

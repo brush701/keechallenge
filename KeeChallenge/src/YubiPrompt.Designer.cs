@@ -59,7 +59,7 @@
             this.CancelButton1.Location = new System.Drawing.Point(259, 30);
             this.CancelButton1.Name = "CancelButton1";
             this.CancelButton1.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton1.TabIndex = 2;
+            this.CancelButton1.TabIndex = 3;
             this.CancelButton1.Text = "&Cancel";
             this.CancelButton1.UseVisualStyleBackColor = true;
             // 
@@ -68,7 +68,7 @@
             this.RecoveryButton.Location = new System.Drawing.Point(116, 30);
             this.RecoveryButton.Name = "RecoveryButton";
             this.RecoveryButton.Size = new System.Drawing.Size(117, 23);
-            this.RecoveryButton.TabIndex = 3;
+            this.RecoveryButton.TabIndex = 2;
             this.RecoveryButton.Text = "Recovery &Mode";
             this.RecoveryButton.UseVisualStyleBackColor = true;
             this.RecoveryButton.Click += new System.EventHandler(this.RecoveryButton_Click);
