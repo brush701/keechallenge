@@ -80,6 +80,7 @@
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.secretTextBox);
             this.Controls.Add(this.promptLabel);
+            this.MaximizeBox = false;
             this.Name = "RecoveryMode";
             this.Text = "Recovery mode";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnClosing);

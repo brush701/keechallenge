@@ -39,7 +39,7 @@
             this.promptLabel.AutoSize = true;
             this.promptLabel.Location = new System.Drawing.Point(100, 9);
             this.promptLabel.Name = "promptLabel";
-            this.promptLabel.Size = new System.Drawing.Size(146, 13);
+            this.promptLabel.Size = new System.Drawing.Size(148, 13);
             this.promptLabel.TabIndex = 0;
             this.promptLabel.Text = "Unable to connect to Yubikey";
             // 
@@ -82,6 +82,7 @@
             this.Controls.Add(this.CancelButton1);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.promptLabel);
+            this.MaximizeBox = false;
             this.Name = "YubiPrompt";
             this.Text = "YubiPrompt";
             this.ResumeLayout(false);
