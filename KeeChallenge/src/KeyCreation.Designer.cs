@@ -81,7 +81,6 @@
             this.LT64_cb.TabIndex = 4;
             this.LT64_cb.Text = "Variable Length Challenge?";
             this.LT64_cb.UseVisualStyleBackColor = true;
-            this.LT64_cb.CheckedChanged += new System.EventHandler(this.LT64_cb_CheckedChanged);
             // 
             // KeyCreation
             // 

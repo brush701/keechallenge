@@ -100,11 +100,6 @@ namespace KeeChallenge
                 Array.Clear(validate.Response, 0, validate.Response.Length);
             }
             GlobalWindowManager.RemoveWindow(this);
-        }
-
-        private void LT64_cb_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }      
+        }    
     }
 }
