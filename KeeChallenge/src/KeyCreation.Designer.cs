@@ -33,21 +33,28 @@
             this.OKButton = new System.Windows.Forms.Button();
             this.CancelButton1 = new System.Windows.Forms.Button();
             this.LT64_cb = new System.Windows.Forms.CheckBox();
+            this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.SuspendLayout();
             // 
             // promptLabel
             // 
             this.promptLabel.AutoSize = true;
+            this.helpProvider1.SetHelpString(this.promptLabel, "Enter the HMAC-SHA1 secret key you generated while setting up Yubikey for challen" +
+        "ge-response mode.");
             this.promptLabel.Location = new System.Drawing.Point(9, 24);
             this.promptLabel.Name = "promptLabel";
+            this.helpProvider1.SetShowHelp(this.promptLabel, true);
             this.promptLabel.Size = new System.Drawing.Size(255, 13);
             this.promptLabel.TabIndex = 0;
             this.promptLabel.Text = "Enter Your Yubkey Challenge-Response Secret Key:";
             // 
             // secretTextBox
             // 
+            this.helpProvider1.SetHelpString(this.secretTextBox, "Enter the HMAC-SHA1 secret key you generated while setting up Yubikey for challen" +
+        "ge-response mode.");
             this.secretTextBox.Location = new System.Drawing.Point(12, 40);
             this.secretTextBox.Name = "secretTextBox";
+            this.helpProvider1.SetShowHelp(this.secretTextBox, true);
             this.secretTextBox.Size = new System.Drawing.Size(325, 20);
             this.secretTextBox.TabIndex = 1;
             // 
@@ -93,7 +100,9 @@
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.secretTextBox);
             this.Controls.Add(this.promptLabel);
+            this.HelpButton = true;
             this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "KeyCreation";
             this.Text = "Secret Key Entry";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnClosing);
@@ -109,6 +118,7 @@
         private System.Windows.Forms.Button OKButton;
         private System.Windows.Forms.Button CancelButton1;
         private System.Windows.Forms.CheckBox LT64_cb;
+        private System.Windows.Forms.HelpProvider helpProvider1;
     }
 }
 
