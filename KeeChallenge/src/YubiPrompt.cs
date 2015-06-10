@@ -44,6 +44,5 @@ namespace KeeChallenge
             RecoveryMode = true;
             this.Close();
         }
-        
     }
 }

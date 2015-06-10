@@ -106,7 +106,6 @@ namespace KeeChallenge
                 m_prov = null;
                 m_host = null;
             }
-        }       
-     
+        }
     }
 }

@@ -61,9 +61,9 @@ namespace KeeChallenge
                     MessageBox.Show("Error: secret must be 20 bytes long");
                     e.Cancel = true;
                     return;
-                }        
+                }
             }
             GlobalWindowManager.RemoveWindow(this);
-        }      
+        }
     }
 }

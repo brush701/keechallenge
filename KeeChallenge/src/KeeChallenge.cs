@@ -105,7 +105,6 @@ namespace KeeChallenge
 
         public byte[] GenerateChallenge()
         {
-            CryptoRandom rand = CryptoRandom.Instance;
             byte[] chal =  CryptoRandom.Instance.GetRandomBytes(challengeLenBytes);  
             if (LT64)
             {
