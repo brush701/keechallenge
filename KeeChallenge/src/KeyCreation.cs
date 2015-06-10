@@ -100,6 +100,6 @@ namespace KeeChallenge
                 Array.Clear(validate.Response, 0, validate.Response.Length);
             }
             GlobalWindowManager.RemoveWindow(this);
-        }      
+        }    
     }
 }

@@ -57,7 +57,7 @@
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(75, 23);
             this.OKButton.TabIndex = 2;
-            this.OKButton.Text = "OK";
+            this.OKButton.Text = "&OK";
             this.OKButton.UseVisualStyleBackColor = true;
             // 
             // CancelButton1
@@ -67,7 +67,7 @@
             this.CancelButton1.Name = "CancelButton1";
             this.CancelButton1.Size = new System.Drawing.Size(75, 23);
             this.CancelButton1.TabIndex = 3;
-            this.CancelButton1.Text = "Cancel";
+            this.CancelButton1.Text = "&Cancel";
             this.CancelButton1.UseVisualStyleBackColor = true;
             // 
             // RecoveryMode
@@ -80,6 +80,7 @@
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.secretTextBox);
             this.Controls.Add(this.promptLabel);
+            this.MaximizeBox = false;
             this.Name = "RecoveryMode";
             this.Text = "Recovery mode";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnClosing);

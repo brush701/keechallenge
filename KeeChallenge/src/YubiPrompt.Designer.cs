@@ -39,9 +39,9 @@
             this.promptLabel.AutoSize = true;
             this.promptLabel.Location = new System.Drawing.Point(100, 9);
             this.promptLabel.Name = "promptLabel";
-            this.promptLabel.Size = new System.Drawing.Size(146, 13);
+            this.promptLabel.Size = new System.Drawing.Size(148, 13);
             this.promptLabel.TabIndex = 0;
-            this.promptLabel.Text = "Unable to connect to yubikey";
+            this.promptLabel.Text = "Unable to connect to Yubikey";
             // 
             // OKButton
             // 
@@ -50,7 +50,7 @@
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(75, 23);
             this.OKButton.TabIndex = 1;
-            this.OKButton.Text = "Retry";
+            this.OKButton.Text = "&Retry";
             this.OKButton.UseVisualStyleBackColor = true;
             // 
             // CancelButton1
@@ -59,8 +59,8 @@
             this.CancelButton1.Location = new System.Drawing.Point(259, 30);
             this.CancelButton1.Name = "CancelButton1";
             this.CancelButton1.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton1.TabIndex = 2;
-            this.CancelButton1.Text = "Cancel";
+            this.CancelButton1.TabIndex = 3;
+            this.CancelButton1.Text = "&Cancel";
             this.CancelButton1.UseVisualStyleBackColor = true;
             // 
             // RecoveryButton
@@ -68,8 +68,8 @@
             this.RecoveryButton.Location = new System.Drawing.Point(116, 30);
             this.RecoveryButton.Name = "RecoveryButton";
             this.RecoveryButton.Size = new System.Drawing.Size(117, 23);
-            this.RecoveryButton.TabIndex = 3;
-            this.RecoveryButton.Text = "Recovery Mode";
+            this.RecoveryButton.TabIndex = 2;
+            this.RecoveryButton.Text = "Recovery &Mode";
             this.RecoveryButton.UseVisualStyleBackColor = true;
             this.RecoveryButton.Click += new System.EventHandler(this.RecoveryButton_Click);
             // 
@@ -82,6 +82,7 @@
             this.Controls.Add(this.CancelButton1);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.promptLabel);
+            this.MaximizeBox = false;
             this.Name = "YubiPrompt";
             this.Text = "YubiPrompt";
             this.ResumeLayout(false);
