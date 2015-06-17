@@ -17,12 +17,7 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 using KeePass.UI;
@@ -66,9 +61,9 @@ namespace KeeChallenge
                     MessageBox.Show("Error: secret must be 20 bytes long");
                     e.Cancel = true;
                     return;
-                }        
+                }
             }
             GlobalWindowManager.RemoveWindow(this);
-        }      
+        }
     }
 }

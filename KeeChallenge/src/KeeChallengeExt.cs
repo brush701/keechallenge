@@ -17,10 +17,7 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
-using System.Configuration;
 
 using KeePass.Plugins;
 
@@ -109,7 +106,6 @@ namespace KeeChallenge
                 m_prov = null;
                 m_host = null;
             }
-        }       
-     
+        }
     }
 }

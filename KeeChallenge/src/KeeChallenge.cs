@@ -18,8 +18,6 @@
 
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Text;
 using System.Security.Cryptography;
 using System.Diagnostics;
 using System.Xml;
@@ -29,7 +27,6 @@ using System.Linq;
 using KeePassLib.Keys;
 using KeePassLib.Utility;
 using KeePassLib.Cryptography;
-using KeePass.UI;
 using KeePassLib.Serialization;
 
 namespace KeeChallenge
@@ -108,7 +105,6 @@ namespace KeeChallenge
 
         public byte[] GenerateChallenge()
         {
-            CryptoRandom rand = CryptoRandom.Instance;
             byte[] chal =  CryptoRandom.Instance.GetRandomBytes(challengeLenBytes);  
             if (LT64)
             {
