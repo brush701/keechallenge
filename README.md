@@ -1,4 +1,4 @@
-KeeChallenge v1.4
+[KeeChallenge v1.4](http://brush701.github.io/keechallenge/ "KeeChallenge Documentation")
 =================
 Copyright 2014 Ben Rush
 
