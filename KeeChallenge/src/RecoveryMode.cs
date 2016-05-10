@@ -33,17 +33,22 @@ namespace KeeChallenge
             private set;
         }
 
-        public RecoveryMode()
+        private KeeChallengeProv m_parent;
+
+        public RecoveryMode(KeeChallengeProv parent)
         {
             InitializeComponent();
 
             Icon = Icon.FromHandle(Properties.Resources.yubikey.GetHicon());
+            m_parent = parent;
         }
 
         public void OnClosing(object o, FormClosingEventArgs e)
         {
             if (DialogResult == DialogResult.OK)
             {
+                m_parent.LT64 = LT64_cb.Checked;
+
                 Secret = new byte[KeeChallengeProv.secretLenBytes];
                 secretTextBox.Text = secretTextBox.Text.Replace(" ", string.Empty); //remove spaces
                

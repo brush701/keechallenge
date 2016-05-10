@@ -390,10 +390,10 @@ namespace KeeChallenge
             }
         }
 
-        private static byte[] RecoveryMode()
+        private byte[] RecoveryMode()
         {
             //prompt user to enter secret
-            RecoveryMode recovery = new RecoveryMode();
+            RecoveryMode recovery = new RecoveryMode(this);
             if (recovery.ShowDialog() != System.Windows.Forms.DialogResult.OK) return null;
             byte[] secret = new byte[recovery.Secret.Length];
 
