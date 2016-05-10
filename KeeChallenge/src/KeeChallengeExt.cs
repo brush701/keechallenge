@@ -35,7 +35,7 @@ namespace KeeChallenge
 
         public override String UpdateUrl
         {
-            get { return "https://sourceforge.net/p/keechallenge/code/ci/master/tree/VERSION?format=raw"; }
+            get { return "https://github.com/brush701/keechallenge/raw/master/VERSION"; }
         }
 
         public IPluginHost Host
