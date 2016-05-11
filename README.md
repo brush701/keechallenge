@@ -1,4 +1,4 @@
-[KeeChallenge v1.4](http://brush701.github.io/keechallenge/ "KeeChallenge Documentation")
+[KeeChallenge v1.5](http://brush701.github.io/keechallenge/ "KeeChallenge Documentation")
 =================
 Copyright 2014 Ben Rush
 
@@ -7,8 +7,8 @@ v1.5
 * Thanks to Robert Claypool for his numerous contributions to clean up and improve Keechallenge
 * Migrated to Github from Sourceforge.
 * Changed recovery mode to better support variable length challenges. 
-* MD5 Checksum: `59A45A7F778FFA786652D3101B806561`
-* SHA1 Checksum: `FC51A0E7DDD61F408D9B1BAC5B4FF87CA0908520`
+* MD5 Checksum: `80A7EADA1C86332B3F91B75E4E8317F0`
+* SHA1 Checksum: `06C3B96ED674E5617F0DAFF5101E23EF95AFF71C`
 
 v1.4
 * Added support for variable length challenges. To use it, a new composite master key must be created.
