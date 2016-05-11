@@ -87,7 +87,7 @@ namespace KeeChallenge
             if (Challenge == null) return;
             success = yubi.ChallengeResponse(yubiSlot, Challenge, out m_response);
             if (!success)
-                MessageBox.Show("Error getting response from yubikey", "Error");           
+                MessageBox.Show("Error getting response from Yubikey", "Error");           
 
             return;
         }
