@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
 </head>
-<body>
+<body onload="getDownloadCount()">
     <section class="page-header">
         <h1 class="project-name">KeeChallenge</h1>
         <h2 class="project-tagline">A plugin for KeePass2 to add Yubikey challenge-response capability.</h2>
@@ -49,8 +49,36 @@
         <footer class="site-footer">
             <span class="site-footer-owner"><a href="https://github.com/brush701/keechallenge">KeeChallenge</a> is maintained by <a href="https://github.com/brush701">brush701</a>.</span>
 
-            <span class="site-footer-credits">This page is based on the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by Jason Long.</span>
+            <span class="site-footer-credits">
+			<p>This page is based on the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by Jason Long.</p>
+			<p id="DownloadCount"></p>
+			</span>
+			
         </footer>
     </section>
+	
+	<script>
+	function httpGetAsync(theUrl, callback)
+	{
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.onreadystatechange = function() { 
+			if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+				callback(xmlHttp.responseText);
+		}
+		xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+		xmlHttp.send(null);
+	}
+	
+	function getDownloadCount() {	
+		httpGetAsync("https://api.github.com/repos/brush701/keechallenge/releases/latest",function(response) {
+			var release = JSON.parse(response);			
+			for (i = 0; i < release.assets.length; i++) {
+				if(release.assets[i].content_type = "application/x-zip-compressed") {
+					document.getElementById("DownloadCount").innerHTML = release.assets[i].download_count + " downloads of " + release.assets[i].name; 	
+				}
+			}			
+		});
+	}
+	</script>
 </body>
 </html>
