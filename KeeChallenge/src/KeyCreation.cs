@@ -40,6 +40,7 @@ namespace KeeChallenge
             Secret = null;
             Icon = Icon.FromHandle(Properties.Resources.yubikey.GetHicon());
             m_parent = parent;
+            Slot_cb.SelectedIndex = (int)m_parent.YubikeySlot;
         }
   
         public void OnClosing(object o, FormClosingEventArgs e)
@@ -47,6 +48,8 @@ namespace KeeChallenge
             if (DialogResult == DialogResult.OK)
             {
                 m_parent.LT64 = LT64_cb.Checked;
+
+                m_parent.YubikeySlot = (YubiSlot)Slot_cb.SelectedIndex;
 
                 Secret = new byte[KeeChallengeProv.secretLenBytes];
                 secretTextBox.Text = secretTextBox.Text.Replace(" ", string.Empty); //remove spaces
