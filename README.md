@@ -9,6 +9,7 @@ v1.5
 * Changed recovery mode to better support variable length challenges. 
 * MD5 Checksum: `59A45A7F778FFA786652D3101B806561`
 * SHA1 Checksum: `FC51A0E7DDD61F408D9B1BAC5B4FF87CA0908520`
+
 v1.4
 * Added support for variable length challenges. To use it, a new composite master key must be created.
 * MD5 Checksum: `7C2F5D8CCBE9549767CA15DE0FBF7383`
