@@ -30,6 +30,7 @@
         {
             this.promptLabel = new System.Windows.Forms.Label();
             this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.abortButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // promptLabel
@@ -45,8 +46,18 @@
             // 
             this.progressBar.Location = new System.Drawing.Point(12, 25);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(260, 23);
+            this.progressBar.Size = new System.Drawing.Size(200, 23);
             this.progressBar.TabIndex = 1;
+            // 
+            // abortButton
+            // 
+            this.abortButton.Location = new System.Drawing.Point(218, 25);
+            this.abortButton.Name = "abortButton";
+            this.abortButton.Size = new System.Drawing.Size(54, 23);
+            this.abortButton.TabIndex = 2;
+            this.abortButton.Text = "Abort";
+            this.abortButton.UseVisualStyleBackColor = true;
+            this.abortButton.Click += new System.EventHandler(this.AbortButton_Click);
             // 
             // KeyEntry
             // 
@@ -54,6 +65,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 58);
             this.ControlBox = false;
+            this.Controls.Add(this.abortButton);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.promptLabel);
             this.MaximizeBox = false;
@@ -71,5 +83,6 @@
 
         private System.Windows.Forms.Label promptLabel;
         private System.Windows.Forms.ProgressBar progressBar;
+        private System.Windows.Forms.Button abortButton;
     }
 }

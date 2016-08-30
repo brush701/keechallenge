@@ -28,7 +28,7 @@ namespace KeeChallenge
 {
     public partial class KeyEntry : Form
     {
-        private System.Windows.Forms.Timer countdown;
+        private Timer countdown;
         private byte[] m_challenge;
         private byte[] m_response;
         private YubiWrapper yubi;
@@ -92,23 +92,28 @@ namespace KeeChallenge
             return;
         }
 
-        private void keyWorkerDone(object sender, EventArgs e) //guaranteed to run after YubiChallengeResponse
+        private void KeyWorkerDone(object sender, EventArgs e) //guaranteed to run after YubiChallengeResponse
         {
             if (success)
-                DialogResult = System.Windows.Forms.DialogResult.OK;  //setting this calls Close() IF the form is shown using ShowDialog()
-            else DialogResult = System.Windows.Forms.DialogResult.No; 
+                DialogResult = DialogResult.OK;  //setting this calls Close() IF the form is shown using ShowDialog()
+            else DialogResult = DialogResult.No; 
         }
 
-        private void Countdown(object sender, EventArgs e)
+        private void Countdown(object sender, EventArgs eventArgs)
         {
             if (countdown == null) return;
             if (progressBar.Value > 0)
                 progressBar.Value--;
             else
             {
-                countdown.Stop();
-                this.Close();
+                CountdownCompleted();
             }
+        }
+
+        private void CountdownCompleted()
+        {
+            countdown.Stop();
+            Close();
         }
         
         private void OnFormLoad(object sender, EventArgs e)
@@ -126,10 +131,10 @@ namespace KeeChallenge
                 {
                     YubiPrompt prompt = new YubiPrompt();
                     DialogResult res =  prompt.ShowDialog();
-                    if (res != System.Windows.Forms.DialogResult.Retry)
+                    if (res != DialogResult.Retry)
                     {
                         RecoveryMode = prompt.RecoveryMode;
-                        DialogResult = System.Windows.Forms.DialogResult.Abort;
+                        DialogResult = DialogResult.Abort;
                         return;
                     }
                 }
@@ -141,14 +146,14 @@ namespace KeeChallenge
                 return;
             }
             //spawn background countdown timer
-            countdown = new System.Windows.Forms.Timer();
+            countdown = new Timer();
             countdown.Tick += Countdown;
             countdown.Interval = 1000;
             countdown.Enabled = true;
 
             keyWorker = new BackgroundWorker();            
             keyWorker.DoWork += YubiChallengeResponse;
-            keyWorker.RunWorkerCompleted += keyWorkerDone;
+            keyWorker.RunWorkerCompleted += KeyWorkerDone;
             keyWorker.RunWorkerAsync();     
         }
 
@@ -164,6 +169,11 @@ namespace KeeChallenge
                 yubi.Close();
             }
             GlobalWindowManager.RemoveWindow(this);
+        }
+
+        private void AbortButton_Click(object sender, EventArgs e)
+        {
+            CountdownCompleted();
         }
     }
 }
