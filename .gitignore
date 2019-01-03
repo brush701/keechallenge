@@ -55,5 +55,17 @@ Desktop.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
+###################
+## Mac detritus
+###################
+
 # Mac jumk
 .DS_Store
+
+###################
+## Binaries
+###################
+
+*.exe
+*.dll
+*.plgx
