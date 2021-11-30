@@ -44,6 +44,19 @@ v1.0.1
 ## Supported Platforms
 As of v1.0.1 both Windows and Linux (Ubuntu) have been tested successfully. To run under Linux using mono, you must modify `KeeChallenge.dll.config` and add a dllmap entry to let Mono know where to find the native libraries. On my system this looks like `<dllmap dll="libykpers-1-1.dll" target="libykpers-1.so>`. For this to work, you must also obtain the appropriate versions of the Yubico libraries. Make sure all of the Yubico libraries are installed where mono can find them (for example, /usr/lib). Put both `KeeChallenge.dll` and `KeeChallenge.dll.config` in the KeePass2 folder (on Ubuntu this is `/usr/lib/keepass2`). The same technique will work on OSX, but getting the 32bit Yubico libraries requires building from source. See the OSX Guide by Markku for detailed instructions on how to do this.  
 
+#### Chocolatey (Windows) 📦 
+Or you can [use Chocolatey to install](https://community.chocolatey.org/packages/keepass-plugin-keechallenge#install) it in a more automated manner:
+
+```
+choco install keepass-plugin-keechallenge
+```
+
+To [upgrade KeePass Plugin KeeChallenge](https://community.chocolatey.org/packages/keepass-plugin-keechallenge#upgrade) to the [latest release version](https://community.chocolatey.org/packages/keepass-plugin-keechallenge#versionhistory) for enjoying the newest features, run the following command from the command line or from PowerShell:
+
+```
+choco upgrade keepass-plugin-keechallenge
+```
+
 ## Dependencies
 KeeChallenge requires KeePass2, available from http://keepass.info/download.html. It also requires the Yubico open source library yubico-personalization (which in turn depends on yubico-c). Prebuilt bundled binaries are available from http://opensource.yubico.com/yubikey-personalization/releases.html. 
 
